@@ -11,8 +11,10 @@ const app = express();
 dotenv.config({path: './config.env'});
 
 
-//importing conn.js file into app.js
+//Database , importing conn.js file into app.js 
 require('./db/conn');
+// const User = require('./model/userSchema')
+
 
 // importing PORT from dotenv
 const PORT = process.env.PORT;

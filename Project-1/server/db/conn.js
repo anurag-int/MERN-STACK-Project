@@ -7,8 +7,8 @@ const DB = process.env.DATABASE;
 
 mongoose.connect(DB)
 .then(()=>{
-    console.log("Connection Successful");
+    console.log("Successfully Connected with mongoDB");
 }).catch((err)=>{
     console.log(err);
-    console.log(`No Connection`)
+    console.log(`No Connection`);
 });
