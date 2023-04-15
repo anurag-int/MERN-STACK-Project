@@ -15,13 +15,16 @@ dotenv.config({path: './config.env'});
 require('./db/conn');
 // const User = require('./model/userSchema')
 
+//the app.js will no understand the data which will come in app.js will we in the form of json
+app.use(express.json())
+
 
 // importing PORT from dotenv
 const PORT = process.env.PORT;
 
 
-
-
+//importing routes in app.js 
+app.use(require('./router/auth'))
 
 
 // Middleware
