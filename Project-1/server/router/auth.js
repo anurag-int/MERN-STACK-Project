@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 
 require('../db/conn');
@@ -13,46 +14,10 @@ router.get('/',(req, res)=>{
     return res.json({"message":"Hello world from the server router js"});
 });
 
-
-// router.post("/register", async(req, res)=>{
-//     // return res.status(422).json({error: "please fill the required details properly"});
-//     const {name, email, phone, work, password, cpassword} = req.body;
-    
-//     if(!(name) || !(email) || !(phone) || !(work) || !(password) || !(cpassword))
-//     {
-//         return res.status(422).json({error : "please fill the form correctly"})
-//     }
-//     // return res.json(req.body);
-
-
-
-//     User.findOne({email: email})
-//     .then((userExist)=>{
-//     if(userExist)
-//     {
-//         return res.json({message: "Email already registred"})
-//     }
-    
-//     const new_user = new User({name, email, phone, work, password, cpassword});
-    
-//     new_user.save()
-//     .then(()=>{
-//         res.status(201).json({message: "User registered successfully"});
-//     })
-//     .catch((err)=>{
-//         res.status(500).json({message: "Failed to registered"});
-//     });
-
-// })
-// .catch((err)=>{
-//     console.log(err);
-// })
-// });
-
 //left email is of original database email and the right one email is of new user email
 
  
-
+// signup route
 router.post('/signup', async(req, res)=>{
     const {name, email, phone, work, password, cpassword} = req.body;
 
@@ -67,27 +32,78 @@ router.post('/signup', async(req, res)=>{
         {
             return res.json({message: "Email Already Exists"});
         }
-
-        const new_User = new User({name, email, phone, work, password, cpassword});
-
-        const saved = await new_User.save();
-        if(saved)
+        else if(password != cpassword)
         {
-            return res.status(200).json({message:"User Registered"});
+            return res.json({message : "Password doesn't match"});
         }
         else
         {
-            return res.status(404).json({message: "Try Again"});
+            const new_User = new User({name, email, phone, work, password, cpassword});
+            // first the hashing function will execute before save() ---> the hasing function is it in userSchema
+            const saved = await new_User.save();
+            if(saved)
+            {
+                return res.status(200).json({message:"User Registered Successfully"});
+            }
+            else
+            {
+                return res.status(404).json({message: "Try Again"});
+            }
         }
+        
+
+
+        
+        
         
     }
     catch(err){
         console.log(err);
     }
-})
+});
 
 
 
+//login route
+
+router.post('/signin', async(req, res)=>{
+    const {email, password} = req.body;
+
+    try{
+        if(!email || !password)
+        {
+            return res.status(400).json({error:"Fill the details first"});
+        }
+        const user_exist = await User.findOne({email:email});
+        // the user.findOne will return the whole object and assign to user_exist
+        
+        if(user_exist)
+        {
+            // first password is req.body.password, and right one is from the database
+            const isMatch = await bcrypt.compare(password, user_exist.password);
+            if(isMatch)
+            {
+                res.json({message:"User Signin Successfully"});
+            }
+            else
+            {
+                res.json({message:"Invalid Details"});
+            }
+        }
+        else
+        {
+            return res.json({error : "Email doesn't exist"});
+        }
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+      
+
+});
+
+ 
 
 
 
