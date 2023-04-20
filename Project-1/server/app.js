@@ -59,6 +59,10 @@ app.get("/contact", (req, res)=>{
 
 
 // listening of giver port
-app.listen(PORT,()=>{
+app.listen(PORT, (err)=>{
+    if(err)
+    {
+        console.log(`${err}`);
+    }
     console.log(`server started on port ${PORT}`);
 })

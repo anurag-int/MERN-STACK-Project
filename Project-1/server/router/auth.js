@@ -26,19 +26,27 @@ router.post('/signup', async(req, res)=>{
         return res.status(402).json({error : "Please fill the form correctly"});
     }
 
-    try{
+    try
+    {
+        //findOne function returns the user object from the database if the data already exists.
         const userExists = await User.findOne({email:email})
         if(userExists)
         {
-            return res.json({message: "Email Already Exists"});
+           return res.json({message: "Email Already Exists"});
         }
-        else if(password != cpassword)
+        if(password != cpassword )
         {
             return res.json({message : "Password doesn't match"});
+        }
+        const phoneNoExists = await User.findOne({phone:phone});
+        if(phoneExists)
+        {
+            return res.json({message: "Phone no already Registered"});
         }
         else
         {
             const new_User = new User({name, email, phone, work, password, cpassword});
+
             // first the hashing function will execute before save() ---> the hasing function is it in userSchema
             const saved = await new_User.save();
             if(saved)
@@ -50,11 +58,6 @@ router.post('/signup', async(req, res)=>{
                 return res.status(404).json({message: "Try Again"});
             }
         }
-        
-
-
-        
-        
         
     }
     catch(err){
@@ -104,10 +107,6 @@ router.post('/signin', async(req, res)=>{
 });
 
  
-
-
-
-
 
 
 module.exports = router;
