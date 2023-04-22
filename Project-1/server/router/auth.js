@@ -34,6 +34,7 @@ router.post('/signup', async(req, res)=>{
         {
            return res.json({message: "Email Already Exists"});
         }
+
         if(password != cpassword )
         {
             return res.json({message : "Password doesn't match"});
@@ -84,6 +85,14 @@ router.post('/signin', async(req, res)=>{
         {
             // first password is req.body.password, and right one is from the database
             const isMatch = await bcrypt.compare(password, user_exist.password);
+            
+            const token = await user_exist.generateAuthToken();
+            console.log(token);
+
+
+            // storing token in cookie
+            res.cookie('jwt', token,  { httpOnly: true, secure: true, maxAge: 3600000 })
+            
             if(isMatch)
             {
                 res.json({message:"User Signin Successfully"});
