@@ -1,0 +1,37 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li{
+    list-style: none;
+}
+
+.nav-link{
+    text-decoration: none;
+    color: #808080;
+    cursor: pointer;
+}
+
+.buttonSection{
+    display: flex;
+    gap: 1rem;
+}
+
+.button{
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0090ff;
+    outline: none;
+    border: none;
+    color: #fff;
+}
+
+.logo{
+    text-decoration: none;
+    color: #282c34;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
